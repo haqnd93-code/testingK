@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKAS - SMK Seri Rompin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .page { display: none; }
+        .page.active { display: block; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .hero-bg {
+            background-image: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                              url('https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .panic-pulse { animation: panic-pulse 2s infinite; }
+        @keyframes panic-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+        #image-modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 20px; }
+        #image-modal.show { display: flex; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <div id="image-modal" onclick="closeModal()">
+        <button class="absolute top-10 right-10 text-white text-5xl">&times;</button>
+        <img id="modal-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border-4 border-white/20">
+    </div>
+
+    <div id="page-home" class="page active">
+        <header class="hero-bg text-white py-20 flex flex-col items-center justify-center text-center shadow-2xl relative border-b-4 border-blue-600">
+            <div class="container mx-auto px-4">
+                <div class="mb-6 flex justify-center">
+                    <img src="logo-rompin.jpg" 
+                         alt="Logo SMK Seri Rompin" 
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Logo+Rompin';"
+                         class="h-32 w-auto drop-shadow-2xl rounded-full border-2 border-white/20 bg-white/5 p-1">
+                </div>
+                
+                <h1 class="text-7xl font-black tracking-tighter uppercase mb-2 text-blue-400 drop-shadow-md">SKAS</h1>
+                <p class="text-xl text-white tracking-[0.2em] font-semibold uppercase italic drop-shadow">Sistem Keselamatan Serins</p>
+                <p class="text-xs text-blue-200 mt-2 font-bold uppercase tracking-widest opacity-70">SMK Seri Rompin</p>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-6 -mt-12 relative z-20">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div onclick="navigateTo('page-guru')" class="bg-white p-10 rounded-3xl shadow-xl border-b-8 border-blue-600 text-center cursor-pointer hover:-translate-y-2 transition-all group">
+                    <div class="w-20 h-20 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-chalkboard-user text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase italic">Guru</h3>
+                    <p class="text-slate-500 mt-3 text-lg font-medium">Lapor Aduan & Pantau</p>
+                </div>
+                <div class="bg-white p-10 rounded-3xl shadow-xl border-b-8 border-emerald-600 text-center opacity-40 grayscale cursor-not-allowed">
+                    <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fa-solid fa-user-graduate text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase italic">Pelajar</h3>
+                    <p class="text-slate-500 mt-3 text-lg font-medium italic">Akses Terhad</p>
+                </div>
+                <div onclick="navigateTo('page-penyelaras')" class="bg-white p-10 rounded-3xl shadow-xl border-b-8 border-amber-500 text-center cursor-pointer hover:-translate-y-2 transition-all group">
+                    <div class="w-20 h-20 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:bg-amber-500 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-user-gear text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-800 uppercase italic">Penyelaras</h3>
+                    <p class="text-slate-500 mt-3 text-lg font-medium">Tindakan & Ulasan</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="page-guru" class="page">
+        <nav class="bg-slate-900 text-white p-6 flex justify-between items-center sticky top-0 z-50 border-b border-slate-800">
+            <span class="font-black text-2xl italic tracking-tighter text-blue-500 uppercase">SKAS GURU</span>
+            <button onclick="navigateTo('page-home')" class="bg-red-600 px-6 py-2 rounded-xl font-bold uppercase text-sm">Keluar</button>
+        </nav>
+        <main class="container mx-auto p-6 lg:p-12">
+            <div class="flex flex-col lg:flex-row gap-8 mb-12 items-center justify-between bg-white p-10 rounded-[2rem] border border-slate-200">
+                <div class="text-center lg:text-left">
+                    <h2 class="text-4xl font-black text-slate-900 uppercase italic">Pusat Kawalan Guru</h2>
+                    <p class="text-xl text-slate-500 font-medium italic">Lapor kes dan pantau maklum balas.</p>
+                </div>
+                <button onclick="triggerPanic()" class="panic-pulse bg-red-600 text-white px-10 py-6 rounded-2xl flex items-center gap-4 hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-bell text-3xl"></i>
+                    <p class="text-2xl font-black uppercase">Butang Panik</p>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-5 bg-white rounded-[2rem] shadow-sm border border-slate-200 overflow-hidden h-fit">
+                    <div class="bg-slate-800 p-8 text-white flex items-center gap-4">
+                        <i class="fa-solid fa-file-circle-exclamation text-3xl text-blue-400"></i>
+                        <h3 class="text-2xl font-black uppercase italic">Borang Aduan</h3>
+                    </div>
+                    <form id="formAduanGuru" class="p-10 space-y-6">
+                        <input type="text" id="guru-nama" placeholder="Nama Anda" required class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-lg font-semibold focus:border-blue-500 outline-none">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="guru-kawasan" placeholder="Lokasi Kejadian" required class="p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-lg font-semibold focus:border-blue-500 outline-none">
+                            <select id="guru-keutamaan" required class="p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-lg font-semibold focus:border-blue-500 outline-none">
+                                <option value="" disabled selected>Keutamaan</option>
+                                <option value="Biasa">Biasa</option>
+                                <option value="Segera">Segera</option>
+                                <option value="Kecemasan">Kecemasan</option>
+                            </select>
+                        </div>
+                        <textarea id="guru-ulasan" rows="2" placeholder="Detail Aduan" required class="w-full p-4 bg-slate-50 border-2 border-slate-200 rounded-2xl text-lg font-semibold focus:border-blue-500 outline-none"></textarea>
+                        <div>
+                            <label class="text-sm font-black text-red-600 uppercase tracking-widest block mb-2 italic">Gambar Bukti (Wajib Isi) *</label>
+                            <input type="file" id="guru-foto" accept="image/*" required class="block w-full text-sm text-slate-500 file:mr-4 file:py-3 file:px-6 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer">
+                        </div>
+                        <button type="submit" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-xl uppercase shadow-lg hover:bg-black transition-all">Hantar Laporan</button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-7 space-y-6">
+                    <div onclick="navigateTo('page-galeri')" class="bg-blue-600 p-8 rounded-[2rem] shadow-xl text-white flex items-center justify-between cursor-pointer hover:bg-blue-700 transition-all">
+                        <div class="flex items-center gap-6"><i class="fa-solid fa-images text-4xl"></i><h3 class="text-2xl font-black uppercase italic">Lihat Galeri SKAS</h3></div>
+                        <i class="fa-solid fa-chevron-right text-2xl"></i>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-blue-600 p-4 rounded-2xl text-center shadow-lg border-b-4 border-blue-800 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest">Baru</p>
+                            <p id="stat-baru" class="text-2xl font-black">0</p>
+                        </div>
+                        <div class="bg-amber-500 p-4 rounded-2xl text-center shadow-lg border-b-4 border-amber-700 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest">Proses</p>
+                            <p id="stat-proses" class="text-2xl font-black">0</p>
+                        </div>
+                        <div class="bg-emerald-600 p-4 rounded-2xl text-center shadow-lg border-b-4 border-emerald-800 text-white">
+                            <p class="text-[10px] font-black uppercase tracking-widest">Selesai</p>
+                            <p id="stat-selesai" class="text-2xl font-black">0</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-8 rounded-[2rem] shadow-2xl border border-slate-800">
+                        <h3 class="text-xl font-black text-blue-400 uppercase italic mb-6 flex items-center gap-3"><i class="fa-solid fa-list-check"></i> Status Aduan</h3>
+                        <div id="senarai-aduan-guru" class="overflow-y-auto custom-scrollbar max-h-[500px] space-y-3 pr-2"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="page-galeri" class="page">
+        <nav class="bg-slate-900 text-white p-8 flex items-center gap-6 sticky top-0 z-50">
+            <button onclick="navigateTo('page-guru')" class="bg-white/10 w-12 h-12 rounded-xl flex items-center justify-center hover:bg-white/20"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 class="text-3xl font-black uppercase italic text-blue-500">Galeri SKAS</h2>
+        </nav>
+        <main class="container mx-auto p-12">
+            <div id="main-gallery-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+        </main>
+    </div>
+
+    <div id="page-penyelaras" class="page">
+        <nav class="bg-amber-500 text-white p-6 flex justify-between items-center shadow-lg">
+            <span class="font-black text-2xl italic uppercase tracking-tighter">SKAS PENYELARAS</span>
+            <button onclick="navigateTo('page-home')" class="bg-amber-900 px-6 py-2 rounded-xl font-bold uppercase text-sm">Kembali</button>
+        </nav>
+        <main class="p-12">
+            <div id="panic-alert-admin" class="hidden mb-10 bg-red-600 text-white p-10 rounded-3xl panic-pulse flex items-center justify-between shadow-2xl">
+                <div>
+                    <h2 class="text-4xl font-black uppercase italic tracking-tighter text-white">Kecemasan Aktif!</h2>
+                    <p id="panic-caller-name" class="text-xl font-bold mt-2 uppercase tracking-widest bg-white/20 inline-block px-4 py-1 rounded-lg">Memuatkan...</p>
+                </div>
+                <button onclick="dismissPanic()" class="bg-white text-red-600 px-8 py-4 rounded-2xl font-black text-lg uppercase shadow-xl hover:bg-slate-100 transition-all">Selesaikan Isyarat</button>
+            </div>
+            
+            <input type="file" id="admin-foto-input" class="hidden" accept="image/*">
+
+            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900 text-white uppercase font-black text-sm tracking-widest">
+                        <tr>
+                            <th class="p-8">Bukti Aduan</th>
+                            <th class="p-8">Laporan Guru</th>
+                            <th class="p-8 text-center">Tindakan & Bukti Selesai</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-table-body" class="text-lg font-medium text-slate-700"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let database = JSON.parse(localStorage.getItem('skas_db_final')) || [];
+        let isPanic = JSON.parse(localStorage.getItem('skas_panic_state')) || false;
+        let panicName = localStorage.getItem('skas_panic_name') || "";
+        let tempIdForPhoto = null;
+
+        window.onload = () => { render(); checkPanicState(); };
+
+        function navigateTo(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            render();
+        }
+
+        function openModal(imgSrc) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = imgSrc;
+            modal.classList.add('show');
+        }
+
+        function closeModal() { document.getElementById('image-modal').classList.remove('show'); }
+
+        function triggerPanic() {
+            const name = prompt("Sila masukkan NAMA ANDA untuk mengaktifkan kecemasan:");
+            if (name === null || name.trim() === "") return;
+            if(confirm(`Adakah anda pasti mahu menghantar isyarat KECEMASAN atas nama ${name.toUpperCase()}?`)) {
+                isPanic = true;
+                panicName = name.toUpperCase();
+                localStorage.setItem('skas_panic_state', true);
+                localStorage.setItem('skas_panic_name', panicName);
+                checkPanicState();
+                alert("Isyarat Kecemasan telah dihantar kepada Penyelaras!");
+            }
+        }
+
+        function dismissPanic() {
+            if(confirm("Adakah situasi kecemasan telah selesai?")) {
+                isPanic = false;
+                panicName = "";
+                localStorage.setItem('skas_panic_state', false);
+                localStorage.setItem('skas_panic_name', "");
+                checkPanicState();
+            }
+        }
+
+        function checkPanicState() {
+            const aa = document.getElementById('panic-alert-admin');
+            const callerDisplay = document.getElementById('panic-caller-name');
+            if(aa) {
+                if(isPanic) {
+                    aa.classList.remove('hidden');
+                    callerDisplay.innerText = `PENGAKTIF: ${panicName}`;
+                } else {
+                    aa.classList.add('hidden');
+                }
+            }
+        }
+
+        function toggleDetail(id) {
+            const detail = document.getElementById(`detail-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            detail.classList.toggle('hidden');
+            icon.style.transform = detail.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+
+        document.getElementById('formAduanGuru').onsubmit = function(e) {
+            e.preventDefault();
+            const file = document.getElementById('guru-foto').files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const data = {
+                    id: Date.now(),
+                    nama: document.getElementById('guru-nama').value,
+                    kawasan: document.getElementById('guru-kawasan').value,
+                    keutamaan: document.getElementById('guru-keutamaan').value,
+                    ulasan: document.getElementById('guru-ulasan').value,
+                    foto: reader.result,
+                    status: 'Diterima',
+                    keteranganPenyelaras: '',
+                    fotoTindakan: '',
+                    masa: new Date().toLocaleTimeString('ms-MY', {hour:'2-digit', minute:'2-digit'})
+                };
+                database.unshift(data);
+                localStorage.setItem('skas_db_final', JSON.stringify(database));
+                alert('Laporan aduan berjaya dihantar!');
+                document.getElementById('formAduanGuru').reset();
+                render();
+            };
+            if (file) reader.readAsDataURL(file);
+        };
+
+        function prosesStatus(id, stat) {
+            const ulasan = prompt("Kemas kini Maklum Balas Penyelaras:");
+            if (ulasan === null) return;
+            database = database.map(d => d.id === id ? { ...d, status: stat, keteranganPenyelaras: ulasan } : d);
+            localStorage.setItem('skas_db_final', JSON.stringify(database));
+            render();
+        }
+
+        function uploadBuktiSelesai(id) {
+            tempIdForPhoto = id;
+            document.getElementById('admin-foto-input').click();
+        }
+
+        document.getElementById('admin-foto-input').onchange = function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                if(tempIdForPhoto) {
+                    database = database.map(d => d.id === tempIdForPhoto ? { ...d, fotoTindakan: reader.result } : d);
+                    localStorage.setItem('skas_db_final', JSON.stringify(database));
+                    tempIdForPhoto = null;
+                    render();
+                    alert("Gambar bukti tindakan selesai dimuat naik!");
+                }
+            };
+            if(file) reader.readAsDataURL(file);
+        };
+
+        function render() {
+            const gList = document.getElementById('senarai-aduan-guru');
+            const aTable = document.getElementById('admin-table-body');
+            const gGallery = document.getElementById('main-gallery-container');
+            let b = 0, p = 0, s = 0;
+
+            if(!gList || !aTable) return;
+            gList.innerHTML = ''; aTable.innerHTML = '';
+            if(gGallery) gGallery.innerHTML = '';
+
+            database.forEach(d => {
+                if(d.status === 'Diterima') b++;
+                if(d.status === 'Proses') p++;
+                if(d.status === 'Selesai') s++;
+
+                let sColor = d.status === 'Selesai' ? 'emerald' : d.status === 'Proses' ? 'amber' : 'blue';
+                
+                // Logik Warna Keutamaan
+                let pColor = "bg-slate-700";
+                if(d.keutamaan === "Biasa") pColor = "bg-blue-500";
+                if(d.keutamaan === "Segera") pColor = "bg-amber-500";
+                if(d.keutamaan === "Kecemasan") pColor = "bg-red-600";
+
+                gList.innerHTML += `
+                    <div class="border border-slate-800 rounded-2xl bg-slate-800/40 overflow-hidden shadow-sm">
+                        <button onclick="toggleDetail(${d.id})" class="w-full p-4 flex items-center justify-between text-left">
+                            <div class="flex items-center gap-4">
+                                <div class="w-1.5 h-8 bg-${sColor}-500 rounded-full"></div>
+                                <div>
+                                    <h4 class="text-white font-black uppercase text-sm tracking-tight">${d.kawasan} 
+                                        <span class="${pColor} text-[8px] px-2 py-0.5 rounded ml-2">${d.keutamaan || 'Biasa'}</span>
+                                    </h4>
+                                    <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">${d.masa} • ${d.nama}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3"><span class="text-[9px] font-black text-${sColor}-400 bg-${sColor}-400/10 px-3 py-1 rounded-lg uppercase border border-${sColor}-400/20">${d.status}</span><i id="icon-${d.id}" class="fa-solid fa-chevron-down text-slate-600 transition-transform"></i></div>
+                        </button>
+                        <div id="detail-${d.id}" class="hidden p-6 bg-slate-900/60 border-t border-slate-800">
+                            <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+                                <div><p class="text-[8px] font-black text-slate-500 uppercase mb-1">Gambar Aduan</p><img src="${d.foto}" onclick="openModal('${d.foto}')" class="w-full h-24 object-cover rounded-xl border border-slate-700 hover:brightness-110"></div>
+                                <div><p class="text-[8px] font-black text-emerald-500 uppercase mb-1">Bukti Selesai</p>${d.fotoTindakan ? `<img src="${d.fotoTindakan}" onclick="openModal('${d.fotoTindakan}')" class="w-full h-24 object-cover rounded-xl border border-emerald-500">` : `<div class="w-full h-24 border border-dashed border-slate-700 rounded-xl flex items-center justify-center text-[8px] text-slate-600 font-bold uppercase italic text-center px-2">Tiada Bukti</div>`}</div>
+                            </div>
+                            <div class="mb-4 text-xs italic text-slate-400">"${d.ulasan}"</div>
+                            <div class="p-4 bg-blue-600/10 border-l-2 border-blue-500 rounded-r-lg"><p class="text-[8px] font-black text-blue-400 uppercase mb-1 italic">Respon:</p><p class="text-sm text-white font-semibold">${d.keteranganPenyelaras || 'Menunggu tindakan...'}</p></div>
+                        </div>
+                    </div>
+                `;
+
+                aTable.innerHTML += `
+                    <tr class="border-b border-slate-100 hover:bg-slate-50">
+                        <td class="p-8"><img src="${d.foto}" onclick="openModal('${d.foto}')" class="w-16 h-16 object-cover rounded-xl shadow cursor-pointer"></td>
+                        <td class="p-8 text-sm font-bold text-slate-700 uppercase tracking-tight">
+                            <span class="text-[10px] text-slate-400 block mb-1 tracking-widest italic uppercase">PENGADU: ${d.nama} (${d.kawasan})</span>
+                            <span class="${pColor} text-white text-[8px] px-2 py-0.5 rounded mb-2 inline-block">${d.keutamaan || 'Biasa'}</span><br>
+                            "${d.ulasan}"
+                        </td>
+                        <td class="p-8 text-center">
+                            <div class="flex flex-col gap-3 items-center">
+                                <div class="flex gap-2">
+                                    <button onclick="prosesStatus(${d.id}, 'Proses')" class="bg-amber-500 text-white px-3 py-2 rounded-lg text-[9px] font-black uppercase">Terima</button>
+                                    <button onclick="prosesStatus(${d.id}, 'Selesai')" class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-[9px] font-black uppercase">Selesai</button>
+                                </div>
+                                <div class="flex items-center gap-2 border-t pt-3 border-slate-100 w-full justify-center">
+                                    ${d.fotoTindakan ? `<img src="${d.fotoTindakan}" onclick="openModal('${d.fotoTindakan}')" class="w-10 h-10 object-cover rounded-md border border-emerald-500 cursor-pointer">` : `<div class="w-10 h-10 bg-slate-100 rounded-md border border-dashed border-slate-300 flex items-center justify-center text-[10px] text-slate-300"><i class="fa-solid fa-image"></i></div>`}
+                                    <button onclick="uploadBuktiSelesai(${d.id})" class="bg-slate-900 text-white w-10 h-10 rounded-md flex items-center justify-center hover:bg-black"><i class="fa-solid fa-camera"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                if(gGallery) {
+                    gGallery.innerHTML += `
+                        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-slate-100 cursor-pointer" onclick="openModal('${d.foto}')">
+                            <div class="aspect-square bg-slate-200 overflow-hidden"><img src="${d.foto}" class="w-full h-full object-cover"></div>
+                            <div class="p-5">
+                                <p class="text-[10px] font-black text-blue-600 uppercase mb-1 tracking-tighter">${d.kawasan}</p>
+                                <p class="text-sm font-semibold italic text-slate-700 truncate">"${d.ulasan}"</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('stat-baru').innerText = b;
+            document.getElementById('stat-proses').innerText = p;
+            document.getElementById('stat-selesai').innerText = s;
+        }
+    </script>
+</body>
+</html>
